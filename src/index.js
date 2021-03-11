@@ -21,12 +21,19 @@ client.on("message", (message)=>{
             .substring(PREFIX.length)
             .split(/\s+/);
         
+// Kicking a user ///////////////////////////////
         if(CMD_NAME === 'kick'){
-            //If no arguments are supplied
-            if(args.length === 0) return message.reply('Please provide a user ID');
-            
-            //Get the user from the args array
+            if (!message.member.hasPermission('KICK_MEMBERS')){
+                return message.reply("You don't have permissions to do that");
+            } 
+// If no arguments are supplied
+            if(args.length === 0) {
+            return message.reply('Please provide a user ID');
+        }
+// Get the user from the args array
             const member = message.guild.members.cache.get(args[0]);
+            
+// Check if there is a member supplied
             if(member){
                 member
                     .kick()
@@ -35,6 +42,17 @@ client.on("message", (message)=>{
             } else {
                 message.channel.send('That member was not found');
             }
+        
+// Banning a user //////////////////////////////
+        } else if (CMD_NAME === 'ban'){
+            if (!message.member.hasPermission('BAN_MEMBERS')){ 
+                return message.reply("You don't have permissions to do that");
+            }
+            if(args.length === 0){
+                return message.reply('Please provide a user ID');
+            }
+            message.guild.members.ban(arg[0])
+                .catch((err)=>console.log(err))
         }
     }
 });
